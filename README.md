@@ -1,9 +1,10 @@
 # Secure Chat Application (SCA)
 ## Introduction
-The Secure Chat Application (SCA) provides a strong foundation for safe interactions among users. It emphasizes privacy and reliability, encrypting and securely sending user messages. The platform includes user authentication, comprehensive encryption from start to finish, and an intuitive interface, all designed to enhance the secure and efficient communication experience. 
+The Secure Chat Application (SCA) provides a strong foundation for safe interactions among users. It emphasizes privacy and reliability, encrypting and securely sending user messages. The platform includes user authentication, comprehensive encryption from start to finish, and an intuitive interface, all designed to enhance the secure and efficient communication experience. By employing RSA encryption algorithms, user credentials are securely stored and transmitted, safeguarding sensitive information from unauthorized access. Additionally, end-to-end encryption ensures that messages can only be decrypted by the intended recipient, maintaining the confidentiality of user communications. Our Secure Chat Application offers a comprehensive solution for secure communication, providing users with the confidence that their messages are protected from interception and tampering.
 ## Instructions for using the application
 
 ![image](https://github.com/AliElgemaey/Secure-Chat-Application-SCA-/assets/114480187/299dca15-80ac-4190-9a23-2363d4c537cb)
+
 Firstly, the user will be asked to enter one of 3 choices
 In addition two accounts must be created to communicate with each other.
 ## Login:
@@ -65,8 +66,12 @@ Go back to the Main menu
 
 ![image](https://github.com/AliElgemaey/Secure-Chat-Application-SCA-/assets/114480187/74d0ec78-0424-46d0-875a-1d74c6379e58)
 
-### When the user finishes and exits (Option3 from Main menu) the application the data will be saved to files, one  for users and the other for the messages as seen in the image above.
+### When the user finishes and exits (Option3 from Main menu) the application, all data will be saved to files, one  for users and the other for the messages as seen in the image above.
+
 ![image](https://github.com/AliElgemaey/Secure-Chat-Application-SCA-/assets/114480187/04f91dde-3025-4e53-9750-3f3e0aa3a83a)
-The above image is for the users, as seen the password and authorized keys are encrypted using RSA
+
+The above image is for the users, as seen the password and authorized keys are encrypted using RSA encryption.
+
 ![image](https://github.com/AliElgemaey/Secure-Chat-Application-SCA-/assets/114480187/a81244a1-747f-47a3-888f-81c3de900cd5)
-This image is for the messages, as seen it is from Venom to Joker and the messages are encrypted using RSA encryption
+
+This image is for the messages, as seen it is from Venom to Joker and the messages are encrypted using RSA encryption.
