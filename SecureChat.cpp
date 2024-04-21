@@ -51,12 +51,16 @@ public:
 	}
 
 	static long long int modExp(long long int base, long long int exponent, long long int modulus) {
+		// Initialize the result to 1
 		long long int result = 1;
+		// Take base modulo modulus to handle large values of base
 		base = base % modulus;
 		while (exponent > 0) {
 			if (exponent % 2 == 1)
 				result = (result * base) % modulus;
+			// Right shift exponent to divide it by 2
 			exponent = exponent >> 1;
+			// Square base: base = (base * base) mod modulus
 			base = (base * base) % modulus;
 		}
 		return result;
@@ -123,25 +127,29 @@ This class implements a hash table to store User Info.
 */
 class UserHashTable {
 private:
+   // Vector of linked lists for storing user nodes
     vector<list<UserNode*>> userHashTable;
+	// Number of users in the hash table
     int size;
     int getHash(const string& key) const {
         return hash<string>()(key) % userHashTable.size();
     }
 public:
+    // constructor to initialize all users hashtable
     UserHashTable(int initSize = 10) : size(0) {
         userHashTable.resize(initSize);
     }
-
+    // destructor to clear all users hashtable
     ~UserHashTable() {
         clear();
     }
 
+    // Adds a new user to the hash table.
     bool add(const string& key, const User& value) {
 		int index = getHash(key);
         for (UserNode* node : userHashTable[index]) {
             if (node->key == key) {
-                // user already exists,do not add him/her
+                // If a user with the same key already exists, do not add them
                 return false;
             }
         }
@@ -151,6 +159,7 @@ public:
 		return true;
     }
 
+    // Checks if a user exists in the hashtable of all users or not.
     bool isUserExist(const string& userName,const string& password,const string& authorizedKey) {
 		int index = getHash(userName);
         for (UserNode* node : userHashTable[index]) {
@@ -161,17 +170,22 @@ public:
         return false;
     }
 
+    // empty all users hashtable
     void clear() {
 		userHashTable.clear();
         size = 0;
     }
 
+    // Saves all user data to a file.
 	void writeData(){
 		ofstream outFile(usersFile);
 		string key;
 		if (outFile.is_open()) {
+			// Iterate through each index in hashtable
 			for(int index = 0 ; index < userHashTable.size(); index++){
+				// Iterate through each node in current index in hashtable
 				for (UserNode* node : userHashTable[index]) {
+					// if node is not null, Write his/here data to the file
 					if(node == NULL)
 						continue;
 					outFile << node->value.userName  << "," << node->value.password << "," << node->value.authorizedKey<<"\n";
@@ -217,7 +231,9 @@ This class implements a hash table to store User Info.
 */
 class MessageHashTable {
 private:
+    // Vector of linked lists for storing message nodes
     vector<list<MessageNode*>> messageHashTable;
+	// Number of messages in the hash table
     int size;
     int getHash(const string& key) const {
         return hash<string>()(key) % messageHashTable.size();
@@ -231,6 +247,7 @@ public:
         clear();
     }
 
+    // Adds a message to the hash table or updates an existing message if the key already exists.
 	void add(const string& key, const Message& value) {
 		int index = getHash(key);
 		for (MessageNode* node : messageHashTable[index]) {
@@ -238,11 +255,12 @@ public:
 				node->value.message += value.message;
             }
         }
-		//new user so add it
+		// If no node with the key is found, add a new node with the key and message value to the linked list
 		messageHashTable[index].push_back(new MessageNode(key,value));
         size++;
     }
 
+    // Retrieves the message associated with the given key from the hash table.
     string getMessage(const string& key) {
 		int index = getHash(key);
         for (MessageNode* node : messageHashTable[index]) {
@@ -253,11 +271,13 @@ public:
         return "";
     }
 
+    // empty all messages hashtable
     void clear() {
 		messageHashTable.clear();
         size = 0;
     }
 
+    // Saves all message data to a file.
 	void writeData(){
 		ofstream outFile(messagesFile);
 		string key;
@@ -276,11 +296,14 @@ public:
 };
 
 
-
+// This Class representing a secure chat application.
 class SecureChatApplication {
 private:
+// Hash table for storing user information
 	UserHashTable usersHashTable;
+	// Hash table for storing message information
 	MessageHashTable messagesHashTable;
+	// Current user logged in to the application
 	string currUser;
 
 public:
@@ -290,6 +313,7 @@ public:
 		currUser = "";
 	}
 
+    // Logs in to the application using the provided credentials.
     void login() {
 		string userName, password, authorizedKey;
 		cout << "Enter User Name: ";
@@ -298,8 +322,11 @@ public:
         getline(cin, password);
         cout << "Enter Authorized Key: ";
         getline(cin, authorizedKey);
+		// Encrypt password using RSA encryption
 		password = RSACipher::encrypt(password);
+		// Encrypt authorized key using RSA encryption
 		authorizedKey = RSACipher::encrypt(authorizedKey);
+		// Check if the user exists in the hash table with the provided info
 		if(usersHashTable.isUserExist(userName,password,authorizedKey)){
 			currUser = userName;
 			cout<<"You have successfully login\n";
@@ -339,6 +366,7 @@ public:
 		}
     }
 
+    // Displays the chat menu and allows user interaction.
 	void chatMenu(){
 		bool exitMenu;
 		int choice;
@@ -348,7 +376,9 @@ public:
 			cout << "2. Show Recieved Messages\n";
 			cout << "3. Log out\n";
 			cout << "your choice [1-3]: ";
+			// Read user's choice from the console
 			cin >> choice;
+			// Ignore any remaining newline characters in the input buffer
 			cin.ignore();
 			switch (choice) {
 				case 1: 
@@ -367,32 +397,41 @@ public:
 		}
 	}
 
+    // Sends a message to the specified receiver.
 	void sendMessage(){
 		string receiverName, message;
         cout << "Enter receiver name: ";
         getline(cin, receiverName);
         cout << "Enter message: ";
         getline(cin, message);
+		// Create a Message object
 		Message messageObj;
 		message = "\n"+currUser+": "+message;
+		// Encrypt the message using RSA encryption
 		message = RSACipher::encrypt(message);
 		messageObj.senderName = currUser;
 		messageObj.receiverName = receiverName;
 		messageObj.message = message;
+		// Add the message to the message hash table
 		messagesHashTable.add(receiverName,messageObj);
 		cout << "Message sent successfully to "<<receiverName<<"\n";
 	}
 
+    // Displays received messages for the current user.
 	void showRecievedMessages(){
+		// Retrieve the encrypted message for the current user
 		string message = messagesHashTable.getMessage(currUser);
+		// Display message for no received messages
 		if(message == ""){
 			cout<<"You did not received any message yet !!!\n";
 			return;
 		}
+		// Decrypt and display the received messages
 		cout<<"Your messages are\n";
 		cout<<RSACipher::decrypt(message)<<endl;
 	}
 
+    // Reads user data from a file and populates the user hash table.
 	void readUsersData(){
 		ifstream inFile(usersFile);
 		if (inFile.is_open()) {
@@ -401,21 +440,27 @@ public:
 			User userObj;
 			while (getline(inFile, line)) {
 				stringstream ss(line);
+				// Temporary string to store parsed values
 				string temp;
+				// Extract username from the line
 				getline(ss, userObj.userName, ',');
 				getline(ss, userObj.password, ',');
 				getline(ss, userObj.authorizedKey, ',');
+				// Add user to the user hash table
 				usersHashTable.add(userObj.userName, userObj);
 			}
 			inFile.close();
 		}
 	}
 
+    // Reads message data from a file and populates the message hash table.
 	void readMessagesData(){
 		ifstream inFile(messagesFile);
 		if (inFile.is_open()) {
 			cout<<"Loading Messages Data from file  ......\n";
+			// Variable to store each line read from the file
 			string line;
+			// Temporary Message object to store message information
 			Message messageObj;
 			while (getline(inFile, line)) {
 				stringstream ss(line);
@@ -429,30 +474,37 @@ public:
 		}
 	}
 	
-
+    // Writes message data to a file.
 	void writeMessagesData(){
+		// Call the writeData() method of the message hash table
 		messagesHashTable.writeData();
 	}
-
+    // Writes user data to a file.
 	void writeUsersData(){
+		// Call the writeData() method of the user hash table
 		usersHashTable.writeData();
 	}
 };
 
-
+// The main function of the Secure Chat Application System (SCAS).
 int main() {
     cout << "Welcome to Our Secure Chat Application System (SCAS)\n\n";
 	RSACipher::generateKeys();
     SecureChatApplication sca;
+	// Flag to control the loop
     bool closeApp;
+	// Variable to store user's choice
 	int choice;
+	// Main menu loop
     for(closeApp = false ; closeApp != true;) {
         cout << "\n\n**** SCAS Main Menu ****\n";
         cout << "1. Login\n";
         cout << "2. SignUp\n";
         cout << "3. Exit\n";
         cout << "your choice [1-3]: ";
+		// Read user's choice
         cin >> choice;
+		// Ignore any remaining newline characters in the input buffer
         cin.ignore();
         switch (choice) {
             case 1: 
@@ -470,7 +522,9 @@ int main() {
         }
     }
 	
+	// Write user data to file
 	sca.writeUsersData();
+	// Write message data to file
 	sca.writeMessagesData();
 	system("pause");
     return 0;
