@@ -56,12 +56,12 @@ Go back to the Main menu
 ![image](https://github.com/AliElgemaey/Secure-Chat-Application-SCA-/assets/114480187/4bdb7544-d54a-4ed3-ad14-cf173f0241b3)
 
 1. So he was asked for the receiver name which was in this case "Joker"
-2. Then he entered the message
+2. Then he entered the message "Hey There!"
 
 ### After that Login as Joker 
 ![image](https://github.com/AliElgemaey/Secure-Chat-Application-SCA-/assets/114480187/e7c72435-50a9-49b0-936a-86aafddcee32)
 
-1. After logging in as Joker the user chose option 2 to show recieved messages
+1. After logging in as Joker the user choose option 2 to show recieved messages
 2. All messages sent from Venom will be visible
 
 ![image](https://github.com/AliElgemaey/Secure-Chat-Application-SCA-/assets/114480187/74d0ec78-0424-46d0-875a-1d74c6379e58)
